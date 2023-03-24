@@ -1,0 +1,8 @@
+{
+  "label": "汇编部分",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "本部分是ICS 大二上学期的课程，讲述信息的处理与表示、程序的机器级表示。"
+  }
+}
