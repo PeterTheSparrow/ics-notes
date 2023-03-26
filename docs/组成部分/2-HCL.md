@@ -1,5 +1,6 @@
 ---
-title: 第二节：HCL
+title: 第二节 HCL
+sidebar_position: 3
 ---
 
 ## 第二节：HCL

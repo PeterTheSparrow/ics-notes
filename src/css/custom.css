@@ -28,3 +28,33 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+/* For bilibili Iframe */
+@media (max-width: 610px) {
+  iframe[src^="//player.bilibili.com/"], iframe[src^="https://player.bilibili.com/"], iframe[src^="http://player.bilibili.com/"] {
+      width: 100%;
+      height: calc(56.25vw - 50.625px);
+  }
+}
+
+@media (min-width: 610px) {
+  iframe[src^="//player.bilibili.com/"], iframe[src^="https://player.bilibili.com/"], iframe[src^="http://player.bilibili.com/"] {
+      width: 100%;
+      height: min(456.125px, calc(56.25vw + 17.375px));
+  }
+}
+
+/* For Office Iframe */
+@media (max-width: 610px) {
+  iframe[src^="//view.officeapps.live.com"], iframe[src^="https://player.bilibili.com/"], iframe[src^="http://player.bilibili.com/"] {
+      width: 100%;
+      height: calc(56.25vw - 50.625px);
+  }
+}
+
+@media (min-width: 610px) {
+  iframe[src^="//view.officeapps.live.com"], iframe[src^="https://player.bilibili.com/"], iframe[src^="http://player.bilibili.com/"] {
+      width: 100%;
+      height: min(456.125px, calc(56.25vw + 17.375px));
+  }
+}

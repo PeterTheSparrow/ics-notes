@@ -1,5 +1,6 @@
 ---
-title: 第一节：Y86 & RISC
+title: 第一节 Y86 & RISC
+sidebar_position: 2
 ---
 
 ## 第一节：Y86 & RISC
