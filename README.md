@@ -1,6 +1,18 @@
 # Website
 
 This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+```
+# gitignore
+node_modules
+
+.gitignore
+
+build
+
+.docusaurus
+```
+
+
 
 ### Installation
 
