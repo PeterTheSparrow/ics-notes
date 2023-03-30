@@ -162,36 +162,36 @@ int Sum(int *Start, int Count)
 
 ```
 IA64 code
-1 sum:
-2     movl $0, %eax 
-3     jmp .L2
-4  .L3: 
-5     addq (%rdi), %rax
-6     addq $8, %rdi
-7     subq $1, %rsi
-8  .L2: 
-9     testq %rsi, %rsi
-10   	jne .L3
-11   	rep; ret
+sum:
+     movl $0, %eax 
+     jmp .L2
+.L3: 
+     addq (%rdi), %rax
+     addq $8, %rdi
+     subq $1, %rsi
+.L2: 
+    testq %rsi, %rsi
+   	jne .L3
+    rep; ret
 ```
 
 ```
 Y86 code
 int Sum(int *Start, int Count)
-1 sum:
-2     irmovq $8,%r8
-3     irmovq $1,%r9
-4     xorq %rax,%rax 
-5     andq %rsi,%rsi 
-6     jmp test 
-7 loop:
-8     mrmovq (%rdi),%r10
-9     addq %r10,%rax
-10   	addq %r8,%rdi 
-11   	subq %r9,%rsi
-12 test:
-13   	jne loop
-14   	ret 
+sum:
+     irmovq $8,%r8
+     irmovq $1,%r9
+     xorq %rax,%rax 
+     andq %rsi,%rsi 
+     jmp test 
+loop:
+    mrmovq (%rdi),%r10
+    addq %r10,%rax
+   	addq %r8,%rdi 
+   	subq %r9,%rsi
+test:
+   	jne loop
+   	ret 
 ```
 
 #### 十、main函数怎么执行的
@@ -203,7 +203,7 @@ int Sum(int *Start, int Count)
  	.pos 0
  	irmovq	    stack, %rsp  # Set up stack pointer
  	call        main         # Execute main program
- 	halt 				             # Terminate program
+ 	halt 				     # Terminate program
 ```
 
 - `.pos0`表示这一部分的内容代码放在地址0
