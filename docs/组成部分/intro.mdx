@@ -2,11 +2,13 @@
 title: 组成部分概述
 sidebar_position: 1
 ---
+import BrowserOnly from '@docusaurus/BrowserOnly';
 
-
-<iframe src={"//view.officeapps.live.com/op/embed.aspx?src=" + escape(window.location.protocol + "//" + window.location.host +  require("@site/static/ppt/2-2-hcl.pdf").default) + "&amp;wdAr=1.7777777777777777"} frameborder="0">这是嵌入 <a target="_blank" href="https://office.com">Microsoft Office</a> 演示文稿，由 <a target="_blank" href="https://office.com/webapps">Office</a> 提供支持。</iframe>
-
-<>{window.location.protocol + "//" + window.location.host +  require("@site/static/ppt/2-2-hcl.pdf").default}</>
+<BrowserOnly fallback={<div>Loading...</div>}>
+      {() => {
+        return <iframe src={"//view.officeapps.live.com/op/embed.aspx?src=" + escape(window.location.protocol + "//" + window.location.host +  require("@site/static/ppt/2-2-hcl.pdf").default) + "&amp;wdAr=1.7777777777777777"} frameBorder="0">这是嵌入 <a target="_blank" href="https://office.com">Microsoft Office</a> 演示文稿，由 <a target="_blank" href="https://office.com/webapps">Office</a> 提供支持。</iframe>;
+      }}
+</BrowserOnly>
 
 ## 视频嵌入测试
 
