@@ -4,4 +4,4 @@
 import OfficePreview from '@site/src/components/OfficePreview/index';
 
 
-<OfficePreview place = "/ppt/3-8-rio.ppt"/>
+<OfficePreview place = "/ppt/2-1-risc.ppt"/>
