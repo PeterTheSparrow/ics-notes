@@ -3,6 +3,8 @@ title: 第一节 Y86 & RISC
 sidebar_position: 2
 ---
 
+<OfficePreview place = "/ppt/2-1-risc.ppt"/>
+
 ## 第一节：Y86 & RISC
 
 ### 一、学习目标：
