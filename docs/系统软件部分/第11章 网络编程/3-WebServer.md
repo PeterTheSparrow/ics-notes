@@ -3,6 +3,10 @@ title: 第三节 WebServer
 sidebar_position: 3
 ---
 
+import OfficePreview from '@site/src/components/OfficePreview/index';
+
+<OfficePreview place = "/ppt/3-11-web.ppt"/>
+
 ## 第三节 WebServer
 
 > browser 可以认为是一个功能比较强大的 web clients。而我们的话会介绍一个功能比较简单的client

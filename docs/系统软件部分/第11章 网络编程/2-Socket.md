@@ -3,6 +3,11 @@ title: 第二节 Socket
 sidebar_position: 2
 ---
 
+import OfficePreview from '@site/src/components/OfficePreview/index';
+
+<OfficePreview place = "/ppt/3-10-socket.ppt"/>
+
+
 ## 第二节 Socket
 
 ### 一、Socket简介

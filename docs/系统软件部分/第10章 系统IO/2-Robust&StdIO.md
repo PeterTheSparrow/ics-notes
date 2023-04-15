@@ -3,6 +3,10 @@ title: 第二节 Robust和STD IO
 sidebar_position: 2
 ---
 
+import OfficePreview from '@site/src/components/OfficePreview/index';
+
+<OfficePreview place = "/ppt/3-8-rio.ppt"/>
+
 ## 第二节 Robust和STD IO 
 
 > 既然 Unix IO 和Std IO都存在，它们都有价值。甚至我们还会介绍Robust第三种IO，他们会有不同的侧重点。

@@ -3,6 +3,10 @@ title: 第六节 Pipe实现
 sidebar_position: 7
 ---
 
+import OfficePreview from '@site/src/components/OfficePreview/index';
+
+<OfficePreview place = "/ppt/2-6-impl.ppt"/>
+
 ## 第六节 Pipe实现
 
 #### 一、Fetch阶段

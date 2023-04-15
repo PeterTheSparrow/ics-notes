@@ -3,6 +3,11 @@ title: 第一节 Network
 sidebar_position: 1
 ---
 
+import OfficePreview from '@site/src/components/OfficePreview/index';
+
+<OfficePreview place = "/ppt/3-9-network.ppt"/>
+
+
 ## 第一节 Network
 
 > 介绍网络编程的一个最简单的一个model，以及网络本身它的一个主要的一个抽象
