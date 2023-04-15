@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import styles from './styles.module.css';
-import BrowserOnly from '@docusaurus/BrowserOnly';
+
 
 type FeatureItem = {
   title: string;
@@ -60,9 +60,6 @@ export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
       <div className="container">
-
-
-        
         <div className="row">
           {FeatureList.map((props, idx) => (
             <Feature key={idx} {...props} />
