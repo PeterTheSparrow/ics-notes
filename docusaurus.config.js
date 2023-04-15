@@ -6,7 +6,6 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 const math = require('remark-math');
 const katex = require('rehype-katex');
-const OfficeIframe = require('./src/components/OfficeIframe/OfficeIframe');
 
 
 /** @type {import('@docusaurus/types').Config} */
@@ -48,34 +47,7 @@ const config = {
           // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/Musicminion/ics-notes/tree/main/',
-          remarkPlugins: [math, [OfficeIframe, 
-            {
-              // Youtube RegEx example
-              'www.youtube.com': {
-                tag: 'iframe',
-                width: 560,
-                height: 315,
-                disabled: false,
-                replace: [
-                  ['watch?v=', 'embed/'],
-                  ['http://', 'https://'],
-                ],
-                thumbnail: {
-                  format: 'http://img.youtube.com/vi/{id}/0.jpg',
-                  id: '.+/(.+)$'
-                },
-                removeAfter: '&'
-              },
-              // Youtube oEmbed example
-              'youtu.be': {
-                width: 560,
-                height: 315,
-                disabled: false,
-                oembed: 'https://www.youtube.com/oembed'
-              }
-            }
-          
-          ]],
+          remarkPlugins: [math],
           rehypePlugins: [katex],
           beforeDefaultRemarkPlugins: [],
         },
