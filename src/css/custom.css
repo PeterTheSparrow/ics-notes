@@ -40,7 +40,7 @@
 @media (min-width: 610px) {
   iframe[src^="//player.bilibili.com/"], iframe[src^="https://player.bilibili.com/"], iframe[src^="http://player.bilibili.com/"] {
       width: 100%;
-      height: min(456.125px, calc(56.25vw + 17.375px));
+      height: min(506.125px, calc(56.25vw + 17.375px));
   }
 }
 
@@ -55,6 +55,6 @@
 @media (min-width: 610px) {
   iframe[src^="//view.officeapps.live.com"], iframe[src^="https://player.bilibili.com/"], iframe[src^="http://player.bilibili.com/"] {
       width: 100%;
-      height: min(456.125px, calc(56.25vw + 17.375px));
+      height: min(556.125px, calc(56.25vw + 17.375px));
   }
 }
