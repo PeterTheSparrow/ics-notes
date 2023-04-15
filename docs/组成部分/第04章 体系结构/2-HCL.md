@@ -3,6 +3,8 @@ title: 第二节 HCL
 sidebar_position: 3
 ---
 
+import OfficePreview from '@site/src/components/OfficePreview/index';
+
 <OfficePreview place = "/ppt/2-2-hcl.ppt"/>
 
 ## 第二节：HCL

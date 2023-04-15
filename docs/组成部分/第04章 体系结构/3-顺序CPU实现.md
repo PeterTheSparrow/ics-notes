@@ -2,6 +2,8 @@
 title: 第三节 顺序CPU实现
 ---
 
+import OfficePreview from '@site/src/components/OfficePreview/index';
+
 <OfficePreview place = "/ppt/2-3-seq.ppt"/>
 
 ## 第三节 顺序CPU实现

@@ -3,6 +3,8 @@ title: 第一节 Y86 & RISC
 sidebar_position: 2
 ---
 
+import OfficePreview from '@site/src/components/OfficePreview/index';
+
 <OfficePreview place = "/ppt/2-1-risc.ppt"/>
 
 ## 第一节：Y86 & RISC
