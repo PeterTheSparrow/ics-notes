@@ -1,53 +1,7 @@
 # Website
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
-```
-# gitignore
-node_modules
+ICS课程笔记：
+- 发布地址一：https://ics-notes.vercel.app
+- 发布地址二：https://ics-notes.netlify.app
 
-.gitignore
-
-build
-
-.docusaurus
-```
-
-
-
-### Installation
-
-```
-$ yarn
-```
-
-### Local Development
-
-```
-$ yarn start
-```
-
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-### Build
-
-```
-$ yarn build
-```
-
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-### Deployment
-
-Using SSH:
-
-```
-$ USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+内容的发布采用 Creative Commons Attribution 4.0 License，完整文本：https://creativecommons.org/licenses/by/4.0/legalcode
