@@ -7,6 +7,7 @@ const math = require('remark-math');
 const katex = require('rehype-katex');
 
 
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'ICS 课程笔记',
@@ -89,10 +90,8 @@ const config = {
             label: '课程笔记',
           },
           // {
-          //   type: 'html',
+          //   type: 'custom-myMusicPlayer',
           //   position: 'right',
-          //   // value: '<musicPlayer/>'
-          //   value: "<musicPlayer/>"
           // },
           {
             href: 'https://github.com/facebook/docusaurus',
