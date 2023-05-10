@@ -5,7 +5,7 @@ sidebar_position: 2
 
 import OfficePreview from '@site/src/components/OfficePreview/index';
 
-<OfficePreview place = "/ppt/3-13-sync.ppt"/>
+<OfficePreview place = "/ppt/3-14-issue.ppt"/>
 
 ## 同步
 
@@ -403,3 +403,156 @@ void reader(void) {
 > ```
 >
 > - 这时候变量存在寄存器，更快了！
+
+#### 5）并行程序的评估
+
+- $S_p = \frac{T_1}{T_p}$
+- 直接测试的话，它其实是某一个硬件平台上面测试的结果，换个机器可能就千差万别。所以需要统一的标准。
+- speed up 就是你的这个性能提升的这个比例，T1代表在单核心的机器上执行的时间，Tp代表多核心（p个核心）的执行时间
+- $E_p=\frac{S_p}{p} = \frac{T_1}{pT_p}$
+- Ep的值最高是1，也就是说，这个是最理想的，只有多线程充分利用了核心，处理器n倍后，时间变成原来的1/n
+- 但是实际上多核心的时候有一些损耗，从单线程到双线程，不可能时间完全是原来的1/2，在一个线程等待另外一个线程的时候肯定要浪费时间
+- 当线程的数量超过CPU核心的数量，时间反而会变长，因为线程换进换出，反而浪费了时间
+
+#### 6）线程安全
+
+- 并行的时候程序出错，很多时候都是因为调用了函数不是线程安全的函数，线程安全的函数的定义是要满足下面的条件
+- 当且仅当：一个函数从多个并发线程重复调用时总是能产生正确的结果，这才是线程安全的函数
+
+- 上面的这个概念很抽象，所以我们一般通过Unsafe的规则来判断，如果出现下面的问题，就是Unsafe
+
+  - Failing to protect shared variables：没有保护共享变量（比如全局变量、静态变量）解决方法：根据情况加锁就可以了！PV函数。但是缺点就是并行的力度降低了，执行时间变长了。
+
+  - Relying on persistent state across invocations：依赖了持久化的状态
+
+    ```c
+    unsigned int next = 1;
+    /* rand – return pseudo-random int on 0..32767 */
+    int rand(void) 
+    {
+        next = next * 110351524 + 12345 ;
+        return (unsigned int)((next/65536) % 32768);
+    }
+    /* srand – set seed for rand() */
+    void srand(unsigned int seed)
+    {
+        next = seed;
+    }
+    
+    ```
+
+    上面的例子里面，就会发现依赖了持久化的状态next。解决方法：每个线程要有自己的内部的变量。如果用PV操作加锁解锁，那是肯定不行的，因为next变量会被别人改了，然后会收到影响。缺点：调用的函数签名可能要改。`rand_v(int *seed)`，调用者主动提供seed这个变量。
+
+  - Returning a pointer to a static variable：返回了一个指针
+
+    ```c
+    char *ctime(const time_t *timep)
+    {
+        static char *p;
+        <get current time and converted to string>
+        return &p;
+    }
+    
+    ```
+
+    看这样一个函数，为什么它的代码会返回一个静态局部变量。同样的一个功能的代码，它有串行版本和并行版本，那么往往我们会发现串行版本它不能直接并变成并行版本，是因为串行版本为了优化，为了提升性能，它会做一些奇怪的事情。这个函数的作用是将一个 time 类型的转换成一个字符串，为了避免分配空间、释放空间这种浪费时间的操作，他索性把变量放在静态变量，就不需要反复分配、释放空间。这样多线程的时候就挂了。修改方法：调用者主动转递一个指针，分配好空间，然后我就拷贝就完事了。【缺点：改接口】
+
+    ```c
+    char *ctime_ts (const time_t timep, char *privatep) 
+    {
+        char *sharedp;
+    
+        P(&mutex);
+        sharedp = ctime(timep);
+        strcpy(privatep, sharedp) ;
+        V(&mutex);
+        return privatep;
+    }
+    
+    ```
+
+    或者用PV操作，增加一个拷贝，在出临界区之前，把东西拷走。
+
+  - Calling thread-unsafe functions，自己调用了线程不安全的函数，那显然就不安全了。解决方法：自己换线程安全的版本
+
+#### 7）reentrant可重入
+
+- 可重入的函数就是他自己不会访问共享变量，是线程安全的重要的一个子集，不需要加锁
+- 效果如下图所示：
+
+![截屏2023-05-10 15.40.47](./2-Sync.assets/%E6%88%AA%E5%B1%8F2023-05-10%2015.40.47.png)
+
+#### 8）Thread local storage
+
+- Thread_local的意思就是，下面的代码里面的I变量，每个线程都有一个自己的拷贝。比如线程1你可以理解为i1、线程2可以理解为i2。
+- 输出的结果只可能是 "2340", "3240", "4230", "4320", "2430" or "3420"
+- 如果你尝试在每个线程里面打印i的地址，就会发现他们其实都是不一样的！
+- 这是C++11的新特性，好处就是避免了你每次调用的时候，手动传递参数（分配好了的空间）进去。
+
+```c
+thread_local int i=0;
+
+void f(int newval) {
+    i=newval;
+}
+void g() {
+    std::cout<<i;
+}
+void threadfunc(int id) {
+    f(id);
+    ++i;
+    g();
+}
+
+
+int main() {
+    i=0;
+    std::thread t1(threadfunc,1);
+    std::thread t2(threadfunc,2);
+    std::thread t3(threadfunc,3);
+
+    t1.join();
+    t2.join();
+    t3.join();
+    std::cout<<i<<std::endl;
+}
+
+```
+
+### 三、经典错误
+
+多线程下面会出现哪些错误呢？一个是Race，一个是死锁
+
+#### 1）Race
+
+- Race竞争，程序的正确性取决于多个线程执行的顺序，谁先执行，谁后执行。其中某一些顺序是正确的，而某一些顺序是不正确的，这就是Data Race
+
+#### 2）DeadLock
+
+- 从起点只能往右边或者上面走，如果是下面图里面的情况，就会出现死锁，进入红色的区域就会死循环
+- 例如下图里面两个线程分别拿s0、s1死锁。
+
+```
+Tid[0]:
+P(s0);
+P(s1);
+cnt++;
+V(s0);
+V(s1);
+```
+
+```
+Tid[1]:
+P(s1);
+P(s0);
+cnt++;
+V(s1);
+V(s0);
+```
+
+- 这个图非常的经典！非常重要！
+
+![截屏2023-05-10 15.53.26](./2-Sync.assets/%E6%88%AA%E5%B1%8F2023-05-10%2015.53.26.png)
+
+
+
