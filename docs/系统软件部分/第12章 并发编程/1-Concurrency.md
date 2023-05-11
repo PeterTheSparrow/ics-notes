@@ -1,5 +1,5 @@
 ---
-title: 第一节 Concurrency
+title: 第一节 并发
 sidebar_position: 1
 ---
 
@@ -7,7 +7,7 @@ import OfficePreview from '@site/src/components/OfficePreview/index';
 
 <OfficePreview place = "/ppt/3-12-con.ppt"/>
 
-## 第一节 Concurrency
+## 第一节 并发
 
 > 上节课我们把网络编程部分其实介绍完了，实现网络程序和普通的应用程序的主要差别就在于，网络程序它涉及到 client 端和 server 端通信的两端，它并不一定是一个人写的这个程序，所以它们之间需要建立一些规范。例如HTTP。
 >
