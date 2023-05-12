@@ -280,6 +280,8 @@ int main(int argc, char **argv)
 
 - 假如我用两个文件标识符怎么样呢？假如foobar.txt的文本是`foobar`。
 
+> 假如foobar.txt的文本是`foobar`。后面说的都是这个文件。
+
 ```cpp
 #include “csapp.h”
  
@@ -365,6 +367,117 @@ int main()
 	read(fdA, &c, 1) ;
 	printf(“c = %c\n”, c) ;
 	exit(0)
+}
+```
+
+### 八、若干问题
+
+这部分还得仔细思考，不然问题还是会很多。
+
+> 问题一：read读取到buf里面，是否会清空buf？
+>
+> - 回答：不会，也就是说，假定`fd`指向的文件是`12345678` 假如你第一次：`read(fd, &buf, 6)`，然后第二次`read(fd, &buf, 2)`，两次都成功读取到了对应的字符，初始化的文件读指针在文件起点。
+> - 那么，只要buf足够大，并且buf初始化的时候内存空间全部为0，那么对应的buf的内容就是：`783456`。也就是说，多次调用read这个API，如果后一次读取的比前面的少，只会抹除前面的部分
+
+- 关于问题一，我写了一个程序验证。
+
+```cpp
+#include <iostream>
+#include <fcntl.h>
+#include <unistd.h>
+#include <cstring>
+int main() {
+    char buf[100]; 
+  	// 万万不可遗漏
+    memset(buf, 0, sizeof(buf));
+
+    int fd = open("test.txt", O_RDWR, 0);
+    int n = read(fd, buf, 10);
+    n = read(fd, buf, 2);
+    
+    // 输出buf的内容
+    for (int i = 0; i < 100; i++) {
+        std::cout << buf[i];
+        if (buf[i] == '\0') break;
+    }
+    std::cout << std::endl;
+    return 0;
+}
+```
+
+- 关于test.txt的文本信息，可以自由设置，只要足够长。
+- 另外值得注意的是：`memset(buf, 0, sizeof(buf));` 这一句话万万不可漏，否则可能分配出来的空间里面，里面的数值都是随机的乱码，打印输出更别提了。
+
+> 问题二：读写指针分开还是连续？
+>
+> - 由于作业题那个爆炸恶心的题目，我已经对于UnixIO产生了严重的不自信和怀疑。
+> - 然后我查阅资料后就发现，以**不同的文件打开方式，文件的读写指针可能是共用一个，也可能是分开，也就是读是读指针，写是写指针**
+
+- 那话不多说，我们上例子。`test.txt`文件的信息是`123456789012345`
+
+```cpp
+#include <iostream>
+#include <fcntl.h>
+#include <unistd.h>
+#include <cstring>
+int main() {
+    char buf[100]; 
+    // 初始化buf
+    memset(buf, 0, sizeof(buf));
+
+    int fd = open("test.txt", O_RDWR, 0);
+    // 尝试读取三个字符
+    read(fd, buf, 3);
+    std::cout << buf << std::endl;
+    // 尝试写入abc
+    write(fd, "abc", 3);
+    // 尝试读取三个字符
+    read(fd, buf, 3);
+    std::cout << buf << std::endl;
+
+    return 0;
+}
+```
+
+- 问题：
+  - 输出是什么？
+  - 文件是什么？
+- 答案：输出是`123\n789`，文件是`123abc789012345`
+- 显然这个时候就能发现，文件的读写指针共用的。
+- 然后我们来一个特殊的例子：
+
+> 这个例子神奇的地方在于，O_RDWR | O_APPEND同时使用的时候，读取文件的指针初始化在开头，写文件的指针初始化在末尾，然后呢一旦写了文件，读文件的指针也会被移动到末尾，所以再读取文件的时候就是空的，这个设计有一些奇怪。
+
+```cpp
+// 文件的内容是：123456789012345
+
+#include <iostream>
+#include <fcntl.h>
+#include <unistd.h>
+#include <cstring>
+int main() {
+    char buf[100]; 
+    // 初始化buf
+    memset(buf, 0, sizeof(buf));
+
+    int fd = open("test.txt", O_RDWR | O_APPEND, 0);
+    
+    // 读取文件内容
+    int n = read(fd, buf, 3);
+    std::cout << buf << std::endl;
+
+    n = read(fd, buf, 3);
+    std::cout << buf << std::endl;
+
+    // 写入abc
+    write(fd, "abc", 3);
+
+    // 读取文件内容
+    n = read(fd, buf, 4);
+  	// 这时候读文件的指针已经被移动到末尾了，所以读取不到任何的内容
+    std::cout << buf << std::endl;
+    std::cout << n << std::endl;
+    return 0;
 }
 ```
 
