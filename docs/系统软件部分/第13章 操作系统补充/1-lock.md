@@ -7,7 +7,7 @@ import OfficePreview from '@site/src/components/OfficePreview/index';
 
 <OfficePreview place = "/ppt/3-15-lock.ppt"/>
 
-## 锁
+## 第一节 锁
 
 > 我们实现并行程序里面大量会使用锁，那么我们要关注这些锁是怎么实现的，以及不同锁它的这个表现。最后我们知道性能很大程度上取决于你对于这种共享变量的这个处理，因为不共享的部分大家并行执行都是很好的，性能差的原因往往就是因为共享锁的这个部分。
 >
@@ -517,3 +517,23 @@ void mutex_unlock (int *mutex) {
 
 - 阶段1是spin的while循环，尝试拿到锁
 - 阶段2是调用者被强制休眠，睡觉，等待被唤醒
+- 它是一个现代的锁，两阶段的锁。新开始的时候，它其实尝试了尝试了，但这边只是尝试了一次，当然你也可以让它尝试几次
+- 但如果你拿不到或者在短期内拿不到的情况下，他这边采用的方式是一个典型的 yield 和signal
+- 它其实是把两种锁结合在了一块，结合的方式是找到适合他们自己的场景，然后能够兼顾这两方面的这个优点
+
+```c
+while (1) {
+      if (atomic_bit_test_set(mutex, 31) == 0) { 
+         atomic_decrement(mutex);
+         return;
+      }
+      v = *mutex;
+      if (v >= 0) continue; // lock has released
+      futex_wait(mutex, v);
+}
+```
+
+> 前面说的是竞争对不对？然后我们从另外一个角度， lock 是用来保护 critical section 对不对？就是一段特殊的代码，这个代码只能让一个线程进去。这段 critical section 它的执行的长短和这个锁的实现有什么关系？
+>
+> - 如果critical section很短，立马就能结束，可能比较适合spin这种自旋锁
+> - 如果你保护的代码比较多，那么你可能比较适合去yield，一方面是说你短时间内等不到这把锁，另一方面你也可以看到这所谓的开销。如果你保护的代码里面有 system call 很长时间可能要几毫秒的这样时间，那么你多几条指令，你这个已有的这个开销和这个通知的这个开销，和这个 spin 相比的这个开销，这个差别其实就变得微不知道了。这个时候更适合yield这种通知机制的锁
